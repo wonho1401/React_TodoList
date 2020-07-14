@@ -5,22 +5,41 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import uuid from "uuid/dist/v4";
 
 class App extends React.Component {
+  ListData;
   state = {
-    items: [],
+    items: [], //item which is already added
     id: uuid(),
-    item: "",
+    item: "", //item which is adding
     editItem: false,
   };
 
+  // constructor(props) {
+  //   super(props);
+
+  //   this.handleChange = this.handleChange.bind(this);
+  //   this.handleEdit = this.handleEdit.bind(this);
+  //   this.handleDelete = this.handleDelete.bind(this);
+  //   this.handleSubmit = this.handleSubmit.bind(this);
+  //   this.clearList = this.clearList.bind(this);
+
+  //   this.state = {
+  //     items: [],
+  //     id: "",
+  //     item: "",
+  //     editItem: false,
+  //   };
+  // }
   handleChange = (e) => {
     this.setState({
       item: e.target.value,
     });
+    // localStorage.setItem("List", JSON.stringify(this.state));
   };
 
-  // When submit form //
+  // When submit form
+  //the latest updated item disappear‼️
   handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Submit 후 Refresh 방지
 
     const newItem = {
       id: this.state.id,
@@ -29,27 +48,38 @@ class App extends React.Component {
 
     const updatedItems = [...this.state.items, newItem];
 
+    console.log(updatedItems);
+
     this.setState({
       items: updatedItems,
       item: "",
       id: uuid(),
       editItem: false,
     });
+
+    localStorage.setItem("List", JSON.stringify(this.state));
   };
 
+  // Clear all list including localStorage (OK)
   clearList = () => {
     this.setState({
       items: [],
     });
+
+    localStorage.clear();
   };
 
+  // localStorage😥
   handleDelete = (id) => {
     const filteredItems = this.state.items.filter((item) => item.id !== id);
     this.setState({
       items: filteredItems,
     });
+
+    localStorage.setItem("List", JSON.stringify(this.state));
   };
 
+  // localStorage😥
   handleEdit = (id) => {
     const filteredItems = this.state.items.filter((item) => item.id !== id);
 
@@ -61,7 +91,29 @@ class App extends React.Component {
       editItem: true,
       id: id,
     });
+
+    localStorage.setItem("List", JSON.stringify(this.state));
   };
+
+  componentDidMount() {
+    this.ListData = JSON.parse(localStorage.getItem("List"));
+
+    console.log(this.ListData);
+
+    // console.log(this.ListData.item);
+    if (localStorage.getItem("List")) {
+      this.setState({
+        items: [...this.ListData.items],
+        id: this.ListData.id,
+      });
+    } else {
+      this.setState({
+        items: [],
+        id: "",
+      });
+    }
+  }
+
   render() {
     return (
       <div className="container">
