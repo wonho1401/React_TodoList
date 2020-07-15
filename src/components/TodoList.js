@@ -8,6 +8,7 @@ export default class TodoList extends Component {
       <ul className="list-group my-5">
         <h3 className="text-capitalize text-center">todo list</h3>
         {items.map((item) => {
+          //여기가 문제다..
           return (
             <TodoItem
               key={item.id}
