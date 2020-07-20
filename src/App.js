@@ -28,6 +28,12 @@ class App extends React.Component {
       title: this.state.item,
     };
 
+    //Prevent blank input
+    if (newItem.title === "") {
+      alert("할 일을 작성해주세요!");
+      return false;
+    }
+
     const updatedItems = [...this.state.items, newItem];
 
     this.setState({
